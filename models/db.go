@@ -5,11 +5,7 @@ import (
 	_ "github.com/jinzhu/gorm/dialects/mysql"
 )
 
-func NewDBContext(db *gorm.DB) *gorm.DB {
-	return db
-}
-
-func GormConnect() *gorm.DB {
+func NewDBContext() *gorm.DB {
 	DBMS := "mysql"
 	USER := "root"
 	PASS := "daisukeoda"

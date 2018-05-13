@@ -13,7 +13,7 @@ import (
 func main() {
 	fmt.Println("server running on port", configs.API_SERVER_PORT)
 
-	db := models.GormConnect()
+	db := models.NewDBContext()
 	defer db.Close()
 
 	db.Set("gorm:table_options", "ENGINE=InnoDB")
