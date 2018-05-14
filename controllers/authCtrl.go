@@ -18,6 +18,7 @@ func NewAuthCtrl(dbCtx *gorm.DB) *AuthCtrl {
 func (c *AuthCtrl) ApiAuth() httprouter.Handle {
   return func (w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
     fmt.Println("api auth")
+    setHeader(w, r)
     // JWT Authentication
   }
 }
