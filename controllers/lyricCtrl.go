@@ -6,8 +6,8 @@ import (
   "net/http"
   "fmt"
   "encoding/json"
-  "github.com/emo-lyrics-api/models"
-  "github.com/emo-lyrics-api/configs"
+  "../models"
+  "../configs"
 )
 
 type LyricCtrl struct {
@@ -33,15 +33,14 @@ func (c *LyricCtrl) DeleteLyrics() httprouter.Handle {
   return func (w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
     fmt.Println("delete lyrics")
     setHeader(w, r)
-    lyricEx := models.Lyric{}
-    c.dbCtx.Delete(lyricEx)
+    c.dbCtx.Delete(models.Lyric{})
     encoder := json.NewEncoder(w)
-    encoder.Encode(lyricEx)
+    encoder.Encode(http.StatusOK)
   }
 }
 
 func (c *LyricCtrl) CreateLyric() httprouter.Handle {
-  return func(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
+  return func(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
     fmt.Println("create lyric")
     setHeader(w, r)
     newLyric := models.Lyric{}
@@ -49,7 +48,7 @@ func (c *LyricCtrl) CreateLyric() httprouter.Handle {
     newLyric.Title = r.FormValue("title")
     newLyric.Singer = r.FormValue("singer")
     newLyric.Url = r.FormValue("url")
-  	c.dbCtx.Create(&newLyric)
+    c.dbCtx.Create(&newLyric)
     encoder := json.NewEncoder(w)
     encoder.Encode(newLyric)
   }

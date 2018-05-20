@@ -6,7 +6,6 @@ import (
 
 type Lyric struct {
   gorm.Model
-  Id int `gorm:primary_key`
   Content string `json:content`
   Title string `json:title`
   Singer string `json:singer`

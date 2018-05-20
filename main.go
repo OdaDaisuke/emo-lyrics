@@ -5,9 +5,9 @@ import (
 	"github.com/julienschmidt/httprouter"
 	"log"
 	"net/http"
-	"github.com/emo-lyrics-api/models"
-	"github.com/emo-lyrics-api/controllers"
-	"github.com/emo-lyrics-api/configs"
+	"./models"
+	"./controllers"
+	"./configs"
 )
 
 func main() {
@@ -20,14 +20,17 @@ func main() {
 	db.AutoMigrate(&models.Lyric{})
 
 	lyricCtrl := controllers.NewLyricCtrl(db)
-	authCtrl := controllers.NewAuthCtrl(db)
+	// authCtrl := controllers.NewAuthCtrl(db)
+	masterDataCtrl := controllers.NewMasterDataCtrl(db)
+	// twitterAuthCtrl := controllers.NewTwitterAuthCtrl(db)
 
 	router := httprouter.New()
 
 	router.GET("/api/v1/lyric", lyricCtrl.GetLyrics())
 	router.POST("/api/v1/lyric", lyricCtrl.CreateLyric())
 	router.DELETE("/api/v1/lyric", lyricCtrl.DeleteLyrics())
-	router.GET("/api/v1/auth", authCtrl.ApiAuth())
+	router.POST("/api/v1/master_data", masterDataCtrl.SetMasterData())
+	// router.GET("/api/v1/get_twitter_oauth_url", twitterAuthCtrl.GetAuthUrl())
 
 	servePort := ":" + configs.API_SERVER_PORT
 	log.Fatal(http.ListenAndServe(servePort, router))
