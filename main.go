@@ -20,9 +20,8 @@ func main() {
 	db.AutoMigrate(&models.Lyric{})
 
 	lyricCtrl := controllers.NewLyricCtrl(db)
-	// authCtrl := controllers.NewAuthCtrl(db)
 	masterDataCtrl := controllers.NewMasterDataCtrl(db)
-	// twitterAuthCtrl := controllers.NewTwitterAuthCtrl(db)
+	twitterAuthCtrl := controllers.NewTwitterAuthCtrl(db)
 
 	router := httprouter.New()
 
@@ -30,7 +29,8 @@ func main() {
 	router.POST("/api/v1/lyric", lyricCtrl.CreateLyric())
 	router.DELETE("/api/v1/lyric", lyricCtrl.DeleteLyrics())
 	router.POST("/api/v1/master_data", masterDataCtrl.SetMasterData())
-	// router.GET("/api/v1/get_twitter_oauth_url", twitterAuthCtrl.GetAuthUrl())
+	router.GET("/api/v1/auth/get_twitter_auth_url", twitterAuthCtrl.GetAuthUrl())
+	router.POST("/api/v1/auth/twitter_verification_code", twitterAuthCtrl.SetVerificationCode())
 
 	servePort := ":" + configs.API_SERVER_PORT
 	log.Fatal(http.ListenAndServe(servePort, router))

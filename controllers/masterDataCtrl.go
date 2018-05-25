@@ -8,7 +8,6 @@ import (
   "encoding/json"
   "io/ioutil"
   "../models"
- // "../configs"
 )
 
 type MasterDataSet struct {

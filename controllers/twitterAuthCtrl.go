@@ -1,13 +1,11 @@
 package controllers
 
-/*
 import (
   "fmt"
   "github.com/jinzhu/gorm"
   "github.com/julienschmidt/httprouter"
   "net/http"
   "encoding/json"
-  // "github.com/emo-lyrics-api/models"
   "../gateways"
 )
 
@@ -23,21 +21,26 @@ func (c *TwitterAuthCtrl) GetAuthUrl() httprouter.Handle {
   return func(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
     fmt.Println("get twitter auth url")
     setHeader(w, r)
-    twitterGW := gateways.NewTwitterGW()
-    authConnect := twitterGW.GetConnect()
-    at, err := twitterGW.GetAccessToken(
-        &oauth.Credentials{
-            Token:  c.CruSession.Get("request_token").(string),
-            Secret: c.CruSession.Get("request_token_secret").(string),
-        },
-        request.Verifier,
-    )
-    if err != nil {
-        panic(err)
+    twitterGW := gateways.NewTwitterGW(r)
+
+    encoder := json.NewEncoder(w)
+    encoder.Encode(twitterGW.GetAuthUrl())
+  }
+}
+
+func (c *TwitterAuthCtrl) SetVerificationCode() httprouter.Handle {
+  return func(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
+    fmt.Println("set twitter verification code")
+    setHeader(w, r)
+
+    twitterGW := gateways.NewTwitterGW(r)
+    verifyRs := twitterGW.SetVerificationCode()
+    res := false
+    if verifyRs {
+      res = true
     }
 
     encoder := json.NewEncoder(w)
-    encoder.Encode(at)
+    encoder.Encode(res)
   }
 }
-*/
