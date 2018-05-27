@@ -18,6 +18,17 @@ func NewLyricCtrl(dbCtx *gorm.DB) *LyricCtrl {
   return &LyricCtrl{dbCtx}
 }
 
+func (c *LyricCtrl) Get404Lyric() httprouter.Handle {
+  return func (w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
+    fmt.Println("get 404 lyric")
+    setHeader(w, r)
+    encoder := json.NewEncoder(w)
+    lyric := []models.Lyric{}
+    c.dbCtx.Limit(1).Find(&lyric, "url=?", "https://www.youtube.com/watch?v=EvBDa4TX3Bo")
+    encoder.Encode(lyric)
+  }
+}
+
 func (c *LyricCtrl) GetLyrics() httprouter.Handle {
   return func (w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
     fmt.Println("get lyrics")

@@ -26,6 +26,7 @@ func main() {
 	router := httprouter.New()
 
 	router.GET("/api/v1/lyric", lyricCtrl.GetLyrics())
+	router.GET("/api/v1/404_lyric", lyricCtrl.Get404Lyric())
 	router.POST("/api/v1/lyric", lyricCtrl.CreateLyric())
 	router.DELETE("/api/v1/lyric", lyricCtrl.DeleteLyrics())
 	router.POST("/api/v1/master_data", masterDataCtrl.SetMasterData())
