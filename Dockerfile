@@ -9,3 +9,4 @@ RUN dep ensure
 RUN go install
 
 EXPOSE 80
+CMD /go/bin/emo-lyrics-api
