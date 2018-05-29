@@ -7,7 +7,7 @@ import (
   "fmt"
   "encoding/json"
   "io/ioutil"
-  "../models"
+  "github.com/OdaDaisuke/emo-lyrics-api/models"
 )
 
 type MasterDataSet struct {

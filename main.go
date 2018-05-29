@@ -5,9 +5,9 @@ import (
 	"github.com/julienschmidt/httprouter"
 	"log"
 	"net/http"
-	"./models"
-	"./controllers"
-	"./configs"
+	"github.com/OdaDaisuke/emo-lyrics-api/models"
+	"github.com/OdaDaisuke/emo-lyrics-api/controllers"
+	"github.com/OdaDaisuke/emo-lyrics-api/configs"
 )
 
 func main() {

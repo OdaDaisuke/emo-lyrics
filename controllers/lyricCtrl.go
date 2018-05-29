@@ -6,8 +6,8 @@ import (
   "net/http"
   "fmt"
   "encoding/json"
-  "../models"
-  "../configs"
+  "github.com/OdaDaisuke/emo-lyrics-api/models"
+  "github.com/OdaDaisuke/emo-lyrics-api/configs"
 )
 
 type LyricCtrl struct {
