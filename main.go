@@ -5,6 +5,7 @@ import (
 	"github.com/julienschmidt/httprouter"
 	"log"
 	"net/http"
+	"google.golang.org/appengine"
 	"github.com/OdaDaisuke/emo-lyrics-api/models"
 	"github.com/OdaDaisuke/emo-lyrics-api/controllers"
 	"github.com/OdaDaisuke/emo-lyrics-api/configs"
@@ -35,4 +36,5 @@ func main() {
 
 	servePort := ":" + configs.API_SERVER_PORT
 	log.Fatal(http.ListenAndServe(servePort, router))
+	appengine.Main()
 }
