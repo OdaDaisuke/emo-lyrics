@@ -1,3 +1,9 @@
 .env
 .DS_Store
 *.swp
+
+# Docker's DB data
+db
+
+# Dep
+vendor
