@@ -1,10 +1,9 @@
-package controllers
+package handlers
 
 import (
   "github.com/jinzhu/gorm"
   "github.com/julienschmidt/httprouter"
   "net/http"
-  "fmt"
   "encoding/json"
   "io/ioutil"
   "github.com/OdaDaisuke/emo-lyrics-api/models"
@@ -14,17 +13,16 @@ type MasterDataSet struct {
   Lyrics []*models.Lyric `json:lyrics`
 }
 
-type MasterDataCtrl struct {
+type MasterDataHandler struct {
   dbCtx *gorm.DB
 }
 
-func NewMasterDataCtrl(dbCtx *gorm.DB) *MasterDataCtrl {
-  return &MasterDataCtrl{dbCtx}
+func NewMasterDataHandler(dbCtx *gorm.DB) *MasterDataHandler {
+  return &MasterDataHandler{dbCtx}
 }
 
-func (c *MasterDataCtrl) SetMasterData() httprouter.Handle {
+func (c *MasterDataHandler) SetMasterData() httprouter.Handle {
   return func (w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
-    fmt.Println("set masterdata")
     setHeader(w, r)
     encoder := json.NewEncoder(w)
     b, _ := ioutil.ReadAll(r.Body)

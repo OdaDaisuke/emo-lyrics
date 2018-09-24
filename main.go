@@ -7,8 +7,9 @@ import (
 	"net/http"
 	"google.golang.org/appengine"
 	"github.com/OdaDaisuke/emo-lyrics-api/models"
-	"github.com/OdaDaisuke/emo-lyrics-api/controllers"
 	"github.com/OdaDaisuke/emo-lyrics-api/configs"
+	"github.com/OdaDaisuke/emo-lyrics-api/handlers"
+	"github.com/OdaDaisuke/emo-lyrics-api/migrations"
 )
 
 func main() {
@@ -17,22 +18,22 @@ func main() {
 	db := models.NewDBContext()
 	defer db.Close()
 
-	db.Set("gorm:table_options", "ENGINE=InnoDB")
-	db.AutoMigrate(&models.Lyric{})
+	migrations.Migration(db)
 
-	lyricCtrl := controllers.NewLyricCtrl(db)
-	masterDataCtrl := controllers.NewMasterDataCtrl(db)
-	twitterAuthCtrl := controllers.NewTwitterAuthCtrl(db)
+	// Init handlers
+	lyricHandler := handlers.NewLyricHandler(db)
+	masterDataHandler := handlers.NewMasterDataHandler(db)
 
 	router := httprouter.New()
 
-	router.GET("/api/v1/lyric", lyricCtrl.GetLyrics())
-	router.GET("/api/v1/404_lyric", lyricCtrl.Get404Lyric())
-	router.POST("/api/v1/lyric", lyricCtrl.CreateLyric())
-	router.DELETE("/api/v1/lyric", lyricCtrl.DeleteLyrics())
-	router.POST("/api/v1/master_data", masterDataCtrl.SetMasterData())
-	router.GET("/api/v1/auth/get_twitter_auth_url", twitterAuthCtrl.GetAuthUrl())
-	router.POST("/api/v1/auth/twitter_verification_code", twitterAuthCtrl.SetVerificationCode())
+	// lyric
+	router.GET("/api/v1/lyric", lyricHandler.GetLyrics())
+	router.GET("/api/v1/404_lyric", lyricHandler.Get404Lyric())
+	router.POST("/api/v1/lyric", lyricHandler.CreateLyric())
+	router.DELETE("/api/v1/lyric", lyricHandler.DeleteLyrics())
+
+	// Master data
+	router.POST("/api/v1/master_data", masterDataHandler.SetMasterData())
 
 	servePort := ":" + configs.API_SERVER_PORT
 	log.Fatal(http.ListenAndServe(servePort, router))

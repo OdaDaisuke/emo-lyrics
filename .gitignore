@@ -1,6 +1,7 @@
 .env
 .DS_Store
 *.swp
+.idea
 
 # Docker's DB data
 db

@@ -1,12 +1,9 @@
 FROM golang:1.9
 
-ADD . /go/src/github.com/OdaDaisuke/emo-lyrics-api
+RUN go get -u gopkg.in/godo.v2/cmd/godo
 
-WORKDIR /go/src/github.com/OdaDaisuke/emo-lyrics-api
+WORKDIR /go/src/app
 
-RUN go get -u github.com/golang/dep/cmd/dep
-RUN dep ensure
-RUN go install
+CMD ["/go/bin/godo", "server", "--watch"]
 
-EXPOSE 80
-CMD /go/bin/emo-lyrics-api
+EXPOSE 8080

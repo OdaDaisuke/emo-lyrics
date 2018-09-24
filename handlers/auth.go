@@ -1,4 +1,4 @@
-package controllers
+package handlers
 
 import (
   "github.com/jinzhu/gorm"
@@ -7,15 +7,15 @@ import (
   "fmt"
 )
 
-type AuthCtrl struct {
+type AuthHandler struct {
   dbCtx *gorm.DB
 }
 
-func NewAuthCtrl(dbCtx *gorm.DB) *AuthCtrl {
-  return &AuthCtrl{dbCtx}
+func NewAuthHandler(dbCtx *gorm.DB) *AuthHandler {
+  return &AuthHandler{dbCtx}
 }
 
-func (c *AuthCtrl) ApiAuth() httprouter.Handle {
+func (c *AuthHandler) ApiAuth() httprouter.Handle {
   return func (w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
     fmt.Println("api auth")
     setHeader(w, r)
