@@ -23,6 +23,7 @@ func main() {
 	// Init handlers
 	lyricHandler := handlers.NewLyricHandler(db)
 	masterDataHandler := handlers.NewMasterDataHandler(db)
+	accountHandler := handlers.NewAccountHandler(db)
 
 	router := httprouter.New()
 
@@ -34,6 +35,12 @@ func main() {
 
 	// Master data
 	router.POST("/api/v1/master_data", masterDataHandler.SetMasterData())
+
+	// account
+	router.POST("/api/v1/account", accountHandler.Signup())
+	router.GET("/api/v1/signin", accountHandler.Signin())
+
+	// me
 
 	servePort := ":" + configs.API_SERVER_PORT
 	log.Fatal(http.ListenAndServe(servePort, router))

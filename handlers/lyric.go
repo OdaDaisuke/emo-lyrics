@@ -21,8 +21,11 @@ func (c *LyricHandler) Get404Lyric() httprouter.Handle {
   return func (w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
     setHeader(w, r)
     encoder := json.NewEncoder(w)
-    lyric := []models.Lyric{}
-    c.dbCtx.Limit(1).Find(&lyric, "url=?", "https://www.youtube.com/watch?v=EvBDa4TX3Bo")
+    lyric := &models.Lyric{
+      Url: "https://www.youtube.com/watch?v=EvBDa4TX3Bo",
+    }
+    c.dbCtx.Model(lyric).Where(lyric).Find(lyric).Last(lyric)
+
     encoder.Encode(lyric)
   }
 }
@@ -51,7 +54,7 @@ func (c *LyricHandler) CreateLyric() httprouter.Handle {
     setHeader(w, r)
 
     newLyric := models.Lyric{}
-    newLyric.Content = r.FormValue("content")
+    newLyric.Lyric = r.FormValue("lyric")
     newLyric.Title = r.FormValue("title")
     newLyric.Singer = r.FormValue("singer")
     newLyric.Url = r.FormValue("url")

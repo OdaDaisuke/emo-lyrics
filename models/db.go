@@ -33,6 +33,7 @@ func NewDBContext() *gorm.DB {
 
 	db = db.Set("gorm:table_options", "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4")
 
+	db.LogMode(true)
 
 	return db
 }

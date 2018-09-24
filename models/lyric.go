@@ -6,10 +6,11 @@ import (
 
 type Lyric struct {
   gorm.Model
-  Content string `json:content`
+  Lyric string `json:lyric`
   Title string `json:title`
   Singer string `json:singer`
   Url string `json:url`
+  Genre string `json:genre`
 }
 
 func (e Lyric) TableName() string {
