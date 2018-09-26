@@ -6,6 +6,7 @@ import (
 
 type User struct {
 	gorm.Model
+	Token string `gorm:"type varchar(40)"`
 	HandleName string `gorm:"type varchar(40)"`
 	TwitterID string `gorm:"type varchar(20)"`
 }
