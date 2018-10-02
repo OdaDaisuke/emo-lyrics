@@ -11,10 +11,14 @@ import (
 
 type LyricHandler struct {
   dbCtx *gorm.DB
+  appConfig *configs.AppConfig
 }
 
-func NewLyricHandler(dbCtx *gorm.DB) *LyricHandler {
-  return &LyricHandler{dbCtx}
+func NewLyricHandler(dbCtx *gorm.DB, appConfig *configs.AppConfig) *LyricHandler {
+  return &LyricHandler{
+    dbCtx: dbCtx,
+    appConfig: appConfig,
+  }
 }
 
 func (c *LyricHandler) Get404Lyric() httprouter.Handle {
@@ -34,7 +38,7 @@ func (c *LyricHandler) GetLyrics() httprouter.Handle {
   return func (w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
     setHeader(w, r)
     lyrics := []models.Lyric{}
-    c.dbCtx.Limit(configs.LYRICS_FETCH_LIMITS).Find(&lyrics)
+    c.dbCtx.Limit(c.appConfig.LyricFetchLimits).Find(&lyrics)
     encoder := json.NewEncoder(w)
     encoder.Encode(lyrics)
   }

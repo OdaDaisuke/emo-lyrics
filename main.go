@@ -13,17 +13,21 @@ import (
 )
 
 func main() {
-	fmt.Println("server running on port", configs.API_SERVER_PORT)
+	appConfigs := configs.LoadAppConfig()
+	fmt.Println("server running on port", appConfigs.ApiServerPort)
 
 	db := models.NewDBContext()
-	defer db.Close()
+	defer func() {
+		// todo: add child transaction rollback
+		db.Close()
+	}()
 
 	migrations.Migration(db)
 
 	// Init handlers
-	lyricHandler := handlers.NewLyricHandler(db)
-	masterDataHandler := handlers.NewMasterDataHandler(db)
-	accountHandler := handlers.NewAccountHandler(db)
+	lyricHandler := handlers.NewLyricHandler(db, appConfigs)
+	masterDataHandler := handlers.NewMasterDataHandler(db, appConfigs)
+	accountHandler := handlers.NewAccountHandler(db, appConfigs)
 
 	router := httprouter.New()
 
@@ -42,7 +46,7 @@ func main() {
 
 	// me
 
-	servePort := ":" + configs.API_SERVER_PORT
+	servePort := ":" + appConfigs.ApiServerPort
 	log.Fatal(http.ListenAndServe(servePort, router))
 	appengine.Main()
 }

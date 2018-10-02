@@ -7,6 +7,7 @@ import (
   "encoding/json"
   "io/ioutil"
   "github.com/OdaDaisuke/emo-lyrics-api/models"
+  "github.com/OdaDaisuke/emo-lyrics-api/configs"
 )
 
 type MasterDataSet struct {
@@ -15,10 +16,14 @@ type MasterDataSet struct {
 
 type MasterDataHandler struct {
   dbCtx *gorm.DB
+  appConfig *configs.AppConfig
 }
 
-func NewMasterDataHandler(dbCtx *gorm.DB) *MasterDataHandler {
-  return &MasterDataHandler{dbCtx}
+func NewMasterDataHandler(dbCtx *gorm.DB, appConfig *configs.AppConfig) *MasterDataHandler {
+  return &MasterDataHandler{
+    dbCtx: dbCtx,
+    appConfig: appConfig,
+  }
 }
 
 func (c *MasterDataHandler) SetMasterData() httprouter.Handle {

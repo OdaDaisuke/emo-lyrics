@@ -6,14 +6,19 @@ import (
 	"net/http"
 	"github.com/OdaDaisuke/emo-lyrics-api/models"
 	"encoding/json"
+	"github.com/OdaDaisuke/emo-lyrics-api/configs"
 )
 
 type AccountHandler struct {
 	dbCtx *gorm.DB
+	appConfig *configs.AppConfig
 }
 
-func NewAccountHandler(dbCtx *gorm.DB) *AccountHandler {
-	return &AccountHandler{dbCtx}
+func NewAccountHandler(dbCtx *gorm.DB, appConfig *configs.AppConfig) *AccountHandler {
+	return &AccountHandler{
+		dbCtx: dbCtx,
+		appConfig: appConfig,
+	}
 }
 
 func (c *AccountHandler) Signup() httprouter.Handle {

@@ -1,4 +1,13 @@
 package configs
 
-const LYRICS_FETCH_LIMITS = 50
-const API_SERVER_PORT = "8888"
+type AppConfig struct {
+	LyricFetchLimits uint
+	ApiServerPort string
+}
+
+func LoadAppConfig() *AppConfig {
+	return &AppConfig{
+		LyricFetchLimits: 50,
+		ApiServerPort: "8080",
+	}
+}
