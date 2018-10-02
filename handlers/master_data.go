@@ -8,6 +8,7 @@ import (
   "io/ioutil"
   "github.com/OdaDaisuke/emo-lyrics-api/models"
   "github.com/OdaDaisuke/emo-lyrics-api/configs"
+  "github.com/OdaDaisuke/emo-lyrics-api/repositories"
 )
 
 type MasterDataSet struct {
@@ -16,12 +17,14 @@ type MasterDataSet struct {
 
 type MasterDataHandler struct {
   dbCtx *gorm.DB
+  repoFactory *repositories.Factory
   appConfig *configs.AppConfig
 }
 
-func NewMasterDataHandler(dbCtx *gorm.DB, appConfig *configs.AppConfig) *MasterDataHandler {
+func NewMasterDataHandler(dbCtx *gorm.DB, repoFactory *repositories.Factory, appConfig *configs.AppConfig) *MasterDataHandler {
   return &MasterDataHandler{
     dbCtx: dbCtx,
+    repoFactory: repoFactory,
     appConfig: appConfig,
   }
 }

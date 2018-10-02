@@ -10,6 +10,7 @@ import (
 	"github.com/OdaDaisuke/emo-lyrics-api/configs"
 	"github.com/OdaDaisuke/emo-lyrics-api/handlers"
 	"github.com/OdaDaisuke/emo-lyrics-api/migrations"
+	"github.com/OdaDaisuke/emo-lyrics-api/repositories"
 )
 
 func main() {
@@ -24,11 +25,15 @@ func main() {
 
 	migrations.Migration(db)
 
-	// Init handlers
-	lyricHandler := handlers.NewLyricHandler(db, appConfigs)
-	masterDataHandler := handlers.NewMasterDataHandler(db, appConfigs)
-	accountHandler := handlers.NewAccountHandler(db, appConfigs)
+	// Init factories
+	repoFactory := repositories.NewFactory(db, appConfigs)
 
+	// Init handlers
+	lyricHandler := handlers.NewLyricHandler(db, repoFactory, appConfigs)
+	masterDataHandler := handlers.NewMasterDataHandler(db, repoFactory, appConfigs)
+	accountHandler := handlers.NewAccountHandler(db, repoFactory, appConfigs)
+
+	// Init router
 	router := httprouter.New()
 
 	// lyric

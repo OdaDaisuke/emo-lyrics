@@ -7,16 +7,19 @@ import (
 	"github.com/OdaDaisuke/emo-lyrics-api/models"
 	"encoding/json"
 	"github.com/OdaDaisuke/emo-lyrics-api/configs"
+	"github.com/OdaDaisuke/emo-lyrics-api/repositories"
 )
 
 type AccountHandler struct {
 	dbCtx *gorm.DB
+	repoFactory *repositories.Factory
 	appConfig *configs.AppConfig
 }
 
-func NewAccountHandler(dbCtx *gorm.DB, appConfig *configs.AppConfig) *AccountHandler {
+func NewAccountHandler(dbCtx *gorm.DB, repoFactory *repositories.Factory, appConfig *configs.AppConfig) *AccountHandler {
 	return &AccountHandler{
 		dbCtx: dbCtx,
+		repoFactory: repoFactory,
 		appConfig: appConfig,
 	}
 }
