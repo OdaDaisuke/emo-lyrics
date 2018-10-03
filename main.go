@@ -2,15 +2,15 @@ package main
 
 import (
 	"fmt"
-	"github.com/julienschmidt/httprouter"
-	"log"
-	"net/http"
-	"google.golang.org/appengine"
-	"github.com/OdaDaisuke/emo-lyrics-api/models"
 	"github.com/OdaDaisuke/emo-lyrics-api/configs"
 	"github.com/OdaDaisuke/emo-lyrics-api/handlers"
 	"github.com/OdaDaisuke/emo-lyrics-api/migrations"
+	"github.com/OdaDaisuke/emo-lyrics-api/models"
 	"github.com/OdaDaisuke/emo-lyrics-api/repositories"
+	"github.com/julienschmidt/httprouter"
+	"google.golang.org/appengine"
+	"log"
+	"net/http"
 )
 
 func main() {
@@ -29,21 +29,20 @@ func main() {
 	repoFactory := repositories.NewFactory(db, appConfigs)
 
 	// Init handlers
-	lyricHandler := handlers.NewLyricHandler(db, repoFactory, appConfigs)
+	defaultHandler := handlers.NewDefaultHandler(db, repoFactory, appConfigs)
 	masterDataHandler := handlers.NewMasterDataHandler(db, repoFactory, appConfigs)
 	accountHandler := handlers.NewAccountHandler(db, repoFactory, appConfigs)
 
 	// Init router
 	router := httprouter.New()
 
-	// lyric
-	router.GET("/api/v1/lyric", lyricHandler.GetLyrics())
-	router.GET("/api/v1/404_lyric", lyricHandler.Get404Lyric())
-	router.POST("/api/v1/lyric", lyricHandler.CreateLyric())
-	router.DELETE("/api/v1/lyric", lyricHandler.DeleteLyrics())
+	router.GET("/api/v1/lyric", accountHandler.GetLyrics())
+	router.GET("/api/v1/404_lyric", defaultHandler.Get404Lyric())
 
 	// Master data
 	router.POST("/api/v1/master_data", masterDataHandler.SetMasterData())
+	router.POST("/api/v1/lyric", masterDataHandler.CreateLyric())
+	router.DELETE("/api/v1/lyric", masterDataHandler.DeleteLyrics())
 
 	// account
 	router.POST("/api/v1/account", accountHandler.Signup())

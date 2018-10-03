@@ -6,8 +6,8 @@ import (
 
 type Fav struct {
 	gorm.Model
-	UserID uint `json:user_id`
-	LyricID uint `json:lyric_id`
+	UserID  uint   `json:user_id`
+	LyricID string `json:lyric_id`
 }
 
 func (e Fav) TableName() string {

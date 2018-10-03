@@ -5,6 +5,7 @@ import (
 	"github.com/OdaDaisuke/emo-lyrics-api/configs"
 	"github.com/OdaDaisuke/emo-lyrics-api/models"
 	"github.com/OdaDaisuke/emo-lyrics-api/repositories"
+	"github.com/OdaDaisuke/emo-lyrics-api/services"
 	"github.com/jinzhu/gorm"
 	"github.com/julienschmidt/httprouter"
 	"io/ioutil"
@@ -16,16 +17,18 @@ type MasterDataSet struct {
 }
 
 type MasterDataHandler struct {
-	dbCtx       *gorm.DB
-	repoFactory *repositories.Factory
-	appConfig   *configs.AppConfig
+	dbCtx         *gorm.DB
+	masterService *services.MasterService
+	appConfig     *configs.AppConfig
 }
 
 func NewMasterDataHandler(dbCtx *gorm.DB, repoFactory *repositories.Factory, appConfig *configs.AppConfig) *MasterDataHandler {
+	masterService := services.NewMasterService(dbCtx, repoFactory.LyricRepo)
+
 	return &MasterDataHandler{
-		dbCtx:       dbCtx,
-		repoFactory: repoFactory,
-		appConfig:   appConfig,
+		dbCtx:         dbCtx,
+		masterService: masterService,
+		appConfig:     appConfig,
 	}
 }
 
@@ -42,5 +45,33 @@ func (c *MasterDataHandler) SetMasterData() httprouter.Handle {
 			c.dbCtx.Create(lyric)
 		}
 		encoder.Encode(http.StatusOK)
+	}
+}
+
+func (c *MasterDataHandler) DeleteLyrics() httprouter.Handle {
+	return func(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
+		setHeader(w, r)
+		c.masterService.DeleteAllLyrics()
+		w.WriteHeader(http.StatusOK)
+	}
+}
+
+func (c *MasterDataHandler) CreateLyric() httprouter.Handle {
+	return func(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+		setHeader(w, r)
+
+		lyric := r.FormValue("lyric")
+		title := r.FormValue("title")
+		singer := r.FormValue("singer")
+		url := r.FormValue("url")
+
+		newLyric, err := c.masterService.CreateLyric(lyric, title, singer, url)
+		if err != nil {
+			w.WriteHeader(500)
+			return
+		}
+
+		encoder := json.NewEncoder(w)
+		encoder.Encode(newLyric)
 	}
 }

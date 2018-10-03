@@ -1,26 +1,29 @@
 package handlers
 
 import (
+	"encoding/json"
+	"github.com/OdaDaisuke/emo-lyrics-api/configs"
+	"github.com/OdaDaisuke/emo-lyrics-api/models"
+	"github.com/OdaDaisuke/emo-lyrics-api/repositories"
+	"github.com/OdaDaisuke/emo-lyrics-api/services"
 	"github.com/jinzhu/gorm"
 	"github.com/julienschmidt/httprouter"
 	"net/http"
-	"github.com/OdaDaisuke/emo-lyrics-api/models"
-	"encoding/json"
-	"github.com/OdaDaisuke/emo-lyrics-api/configs"
-	"github.com/OdaDaisuke/emo-lyrics-api/repositories"
 )
 
 type AccountHandler struct {
-	dbCtx *gorm.DB
-	repoFactory *repositories.Factory
-	appConfig *configs.AppConfig
+	dbCtx          *gorm.DB
+	accountService *services.AccountService
+	appConfig      *configs.AppConfig
 }
 
 func NewAccountHandler(dbCtx *gorm.DB, repoFactory *repositories.Factory, appConfig *configs.AppConfig) *AccountHandler {
+	accountService := services.NewAccountService(dbCtx, repoFactory.LyricRepo, repoFactory.FavRepo)
+
 	return &AccountHandler{
-		dbCtx: dbCtx,
-		repoFactory: repoFactory,
-		appConfig: appConfig,
+		dbCtx:          dbCtx,
+		accountService: accountService,
+		appConfig:      appConfig,
 	}
 }
 
@@ -28,10 +31,8 @@ func (c *AccountHandler) Signup() httprouter.Handle {
 	return func(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 		setHeader(w, r)
 
-		user := models.User{
-			Token: r.FormValue("token"),
-		}
-		c.dbCtx.Create(&user)
+		token := r.FormValue("token")
+		user := c.accountService.Signup(token)
 
 		encoder := json.NewEncoder(w)
 		encoder.Encode(user)
@@ -42,31 +43,33 @@ func (c *AccountHandler) Signin() httprouter.Handle {
 	return func(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 		setHeader(w, r)
 
-		user := &models.User{
-			Token: r.FormValue("token"),
+		token := r.FormValue("token")
+		user, err := c.accountService.Signin(token)
+		if err != nil {
+			w.WriteHeader(500)
 		}
-		c.dbCtx.Where(user).Last(user)
 
 		encoder := json.NewEncoder(w)
 		encoder.Encode(user)
 	}
 }
 
-func(c *AccountHandler) PostFav() httprouter.Handle {
+func (c *AccountHandler) PostFav() httprouter.Handle {
 	return func(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 		setHeader(w, r)
 
-		fav := &models.Fav{
-			//LyricID: r.FormValue("lyric_id"),
+		lyricId := r.FormValue("lyric_id")
+		fav, err := c.accountService.PostFav(lyricId)
+		if err != nil {
+			w.WriteHeader(500)
 		}
-		c.dbCtx.Where(fav).Last(fav)
 
 		encoder := json.NewEncoder(w)
 		encoder.Encode(fav)
 	}
 }
 
-func(c *AccountHandler) UnFav() httprouter.Handle {
+func (c *AccountHandler) UnFav() httprouter.Handle {
 	return func(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 		setHeader(w, r)
 
@@ -80,7 +83,7 @@ func(c *AccountHandler) UnFav() httprouter.Handle {
 	}
 }
 
-func(c *AccountHandler) GetFavList() httprouter.Handle {
+func (c *AccountHandler) GetFavList() httprouter.Handle {
 	return func(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 		setHeader(w, r)
 
@@ -92,5 +95,20 @@ func(c *AccountHandler) GetFavList() httprouter.Handle {
 
 		encoder := json.NewEncoder(w)
 		encoder.Encode(fav)
+	}
+}
+
+func (c *AccountHandler) GetLyrics() httprouter.Handle {
+	return func(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+		setHeader(w, r)
+
+		lyrics, err := c.accountService.GetLyrics()
+		if err != nil {
+			w.WriteHeader(500)
+			return
+		}
+
+		encoder := json.NewEncoder(w)
+		encoder.Encode(lyrics)
 	}
 }
