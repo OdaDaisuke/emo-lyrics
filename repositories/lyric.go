@@ -1,19 +1,20 @@
 package repositories
 
 import (
-	"github.com/jinzhu/gorm"
-	"github.com/OdaDaisuke/emo-lyrics-api/models"
 	"github.com/OdaDaisuke/emo-lyrics-api/configs"
+	"github.com/OdaDaisuke/emo-lyrics-api/interfaces"
+	"github.com/OdaDaisuke/emo-lyrics-api/models"
+	"github.com/jinzhu/gorm"
 )
 
 type LyricRepo struct {
-	dbCtx *gorm.DB
+	dbCtx     *gorm.DB
 	appConfig *configs.AppConfig
 }
 
 func NewLyricRepo(dbCtx *gorm.DB, appConfig *configs.AppConfig) *LyricRepo {
 	return &LyricRepo{
-		dbCtx: dbCtx,
+		dbCtx:     dbCtx,
 		appConfig: appConfig,
 	}
 }
@@ -40,12 +41,12 @@ func (l *LyricRepo) GetAll() ([]*models.Lyric, error) {
 	return lyrics, nil
 }
 
-func (l *LyricRepo) Create(lyric, title, singer, url string) (*models.Lyric, error) {
+func (l *LyricRepo) Create(params *interfaces.CreateLyricParams) (*models.Lyric, error) {
 	newLyric := &models.Lyric{
-		Lyric: "",
-		Title: "",
-		Singer: "",
-		Url: "",
+		Lyric:  params.Lyric,
+		Title:  params.Title,
+		Singer: params.Singer,
+		Url:    params.Url,
 	}
 	err := l.dbCtx.Create(newLyric).Error
 	if err != nil {

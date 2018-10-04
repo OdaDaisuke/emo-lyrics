@@ -1,6 +1,7 @@
 package repositories
 
 import (
+	"github.com/OdaDaisuke/emo-lyrics-api/interfaces"
 	"github.com/OdaDaisuke/emo-lyrics-api/models"
 	"github.com/jinzhu/gorm"
 )
@@ -15,9 +16,10 @@ func NewFavRepo(dbCtx *gorm.DB) *FavRepo {
 	}
 }
 
-func (r *FavRepo) PostFav(lyricId string) (*models.Fav, error) {
+func (r *FavRepo) PostFav(params *interfaces.PostFavParams) (*models.Fav, error) {
 	fav := &models.Fav{
-		LyricID: lyricId,
+		LyricID: params.LyricId,
+		UserID:  params.UserId,
 	}
 	if err := r.dbCtx.Where(fav).Last(fav).Error; err != nil {
 		return nil, err
@@ -25,19 +27,24 @@ func (r *FavRepo) PostFav(lyricId string) (*models.Fav, error) {
 	return fav, nil
 }
 
-func (r *FavRepo) UnFav(lyricId string) (*models.Fav, error) {
+func (r *FavRepo) UnFav(params *interfaces.UnFavParams) (*models.Fav, error) {
 	fav := &models.Fav{
-		LyricID: lyricId,
+		UserID:  params.UserId,
+		LyricID: params.LyricId,
 	}
-	if err := r.dbCtx.Where(fav).Update(fav).Error; err != nil {
+	if err := r.dbCtx.Where(fav).Delete(fav).Error; err != nil {
 		return nil, err
 	}
 	return fav, nil
 }
 
-func (r *FavRepo) GetMyFavList() ([]*models.Fav, error) {
+func (r *FavRepo) GetMyFavList(params *interfaces.GetFavListParams) ([]*models.Fav, error) {
 	fav := []*models.Fav{}
-	if err := r.dbCtx.Model(fav).Find(fav).Error; err != nil {
+	where := &models.Fav{
+		UserID: params.UserId,
+	}
+
+	if err := r.dbCtx.Model(fav).Where(where).Find(fav).Error; err != nil {
 		return nil, err
 	}
 	return fav, nil

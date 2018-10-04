@@ -1,6 +1,7 @@
 package services
 
 import (
+	"github.com/OdaDaisuke/emo-lyrics-api/interfaces"
 	"github.com/OdaDaisuke/emo-lyrics-api/models"
 	"github.com/OdaDaisuke/emo-lyrics-api/repositories"
 	"github.com/jinzhu/gorm"
@@ -18,8 +19,8 @@ func NewMasterService(dbCtx *gorm.DB, lyricRepo *repositories.LyricRepo) *Master
 	}
 }
 
-func (s *MasterService) CreateLyric(content, title, singer, url string) (*models.Lyric, error) {
-	lyric, err := s.lyricRepo.Create(content, title, singer, url)
+func (s *MasterService) CreateLyric(params *interfaces.CreateLyricParams) (*models.Lyric, error) {
+	lyric, err := s.lyricRepo.Create(params)
 	if err != nil {
 		return nil, err
 	}

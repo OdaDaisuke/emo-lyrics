@@ -3,7 +3,7 @@ package handlers
 import (
 	"encoding/json"
 	"github.com/OdaDaisuke/emo-lyrics-api/configs"
-	"github.com/OdaDaisuke/emo-lyrics-api/models"
+	"github.com/OdaDaisuke/emo-lyrics-api/interfaces"
 	"github.com/OdaDaisuke/emo-lyrics-api/repositories"
 	"github.com/OdaDaisuke/emo-lyrics-api/services"
 	"github.com/jinzhu/gorm"
@@ -31,20 +31,32 @@ func (c *AccountHandler) Signup() httprouter.Handle {
 	return func(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 		setHeader(w, r)
 
-		token := r.FormValue("token")
-		user := c.accountService.Signup(token)
+		params := &interfaces.SignupParams{
+			TwitterId:            r.FormValue("twitter_id"),
+			Lang:                 r.FormValue("lang"),
+			Location:             r.FormValue("location"),
+			Name:                 r.FormValue("name"),
+			ProfileBannerUrl:     r.FormValue("profile_banner_url"),
+			ProfileImageUrlHttps: r.FormValue("profile_image_url_https"),
+			Protected:            r.FormValue("protected"),
+			ScreenName:           r.FormValue("screen_name"),
+			Url:                  r.FormValue("url"),
+		}
+		user := c.accountService.Signup(params)
 
 		encoder := json.NewEncoder(w)
 		encoder.Encode(user)
 	}
 }
 
-func (c *AccountHandler) Signin() httprouter.Handle {
+func (c *AccountHandler) GetMe() httprouter.Handle {
 	return func(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 		setHeader(w, r)
 
-		token := r.FormValue("token")
-		user, err := c.accountService.Signin(token)
+		params := &interfaces.GetMeParams{
+			TwitterId: r.FormValue("twitter_id"),
+		}
+		user, err := c.accountService.GetMe(params)
 		if err != nil {
 			w.WriteHeader(500)
 		}
@@ -58,8 +70,11 @@ func (c *AccountHandler) PostFav() httprouter.Handle {
 	return func(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 		setHeader(w, r)
 
-		lyricId := r.FormValue("lyric_id")
-		fav, err := c.accountService.PostFav(lyricId)
+		params := &interfaces.PostFavParams{
+			UserId:  r.FormValue("user_id"),
+			LyricId: r.FormValue("lyric_id"),
+		}
+		fav, err := c.accountService.PostFav(params)
 		if err != nil {
 			w.WriteHeader(500)
 		}
@@ -73,10 +88,14 @@ func (c *AccountHandler) UnFav() httprouter.Handle {
 	return func(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 		setHeader(w, r)
 
-		fav := &models.Fav{
-			//LyricID: r.FormValue("lyric_id"),
+		params := &interfaces.UnFavParams{
+			UserId:  r.FormValue("user_id"),
+			LyricId: r.FormValue("lyric_id"),
 		}
-		c.dbCtx.Where(fav).Delete(fav)
+		_, err := c.accountService.UnFav(params)
+		if err != nil {
+			w.WriteHeader(500)
+		}
 
 		encoder := json.NewEncoder(w)
 		encoder.Encode(nil)
@@ -87,14 +106,16 @@ func (c *AccountHandler) GetFavList() httprouter.Handle {
 	return func(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 		setHeader(w, r)
 
-		fav := &models.Fav{
-			//UserID:: r.FormValue("user_id"),
-			//LyricID: r.FormValue("lyric_id"),
+		params := &interfaces.GetFavListParams{
+			UserId: r.FormValue("user_id"),
 		}
-		c.dbCtx.Where(fav).Find(fav)
+		favList, err := c.accountService.GetFavList(params)
+		if err != nil {
+			w.WriteHeader(500)
+		}
 
 		encoder := json.NewEncoder(w)
-		encoder.Encode(fav)
+		encoder.Encode(favList)
 	}
 }
 

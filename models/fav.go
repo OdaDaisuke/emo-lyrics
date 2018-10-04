@@ -6,7 +6,7 @@ import (
 
 type Fav struct {
 	gorm.Model
-	UserID  uint   `json:user_id`
+	UserID  string `json:user_id`
 	LyricID string `json:lyric_id`
 }
 

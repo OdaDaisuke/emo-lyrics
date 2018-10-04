@@ -3,6 +3,7 @@ package handlers
 import (
 	"encoding/json"
 	"github.com/OdaDaisuke/emo-lyrics-api/configs"
+	"github.com/OdaDaisuke/emo-lyrics-api/interfaces"
 	"github.com/OdaDaisuke/emo-lyrics-api/models"
 	"github.com/OdaDaisuke/emo-lyrics-api/repositories"
 	"github.com/OdaDaisuke/emo-lyrics-api/services"
@@ -37,12 +38,23 @@ func (c *MasterDataHandler) SetMasterData() httprouter.Handle {
 		setHeader(w, r)
 		encoder := json.NewEncoder(w)
 		b, _ := ioutil.ReadAll(r.Body)
+
 		var dataSet MasterDataSet
 		if err := json.Unmarshal(b, &dataSet); err != nil {
 			encoder.Encode(http.StatusInternalServerError)
 		}
+
 		for _, lyric := range dataSet.Lyrics {
-			c.dbCtx.Create(lyric)
+			params := &interfaces.CreateLyricParams{
+				Lyric:  lyric.Lyric,
+				Title:  lyric.Title,
+				Singer: lyric.Singer,
+				Url:    lyric.Url,
+			}
+			_, err := c.masterService.CreateLyric(params)
+			if err != nil {
+				w.WriteHeader(500)
+			}
 		}
 		encoder.Encode(http.StatusOK)
 	}
@@ -60,12 +72,14 @@ func (c *MasterDataHandler) CreateLyric() httprouter.Handle {
 	return func(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 		setHeader(w, r)
 
-		lyric := r.FormValue("lyric")
-		title := r.FormValue("title")
-		singer := r.FormValue("singer")
-		url := r.FormValue("url")
+		params := &interfaces.CreateLyricParams{
+			Lyric:  r.FormValue("lyric"),
+			Title:  r.FormValue("title"),
+			Singer: r.FormValue("singer"),
+			Url:    r.FormValue("url"),
+		}
 
-		newLyric, err := c.masterService.CreateLyric(lyric, title, singer, url)
+		newLyric, err := c.masterService.CreateLyric(params)
 		if err != nil {
 			w.WriteHeader(500)
 			return
