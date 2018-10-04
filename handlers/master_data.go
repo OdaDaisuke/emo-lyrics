@@ -73,10 +73,10 @@ func (c *MasterDataHandler) CreateLyric() httprouter.Handle {
 		setHeader(w, r)
 
 		params := &interfaces.CreateLyricParams{
-			Lyric:  r.FormValue("lyric"),
-			Title:  r.FormValue("title"),
-			Singer: r.FormValue("singer"),
-			Url:    r.FormValue("url"),
+			Lyric:  r.Form.Get("lyric"),
+			Title:  r.Form.Get("title"),
+			Singer: r.Form.Get("singer"),
+			Url:    r.Form.Get("url"),
 		}
 
 		newLyric, err := c.masterService.CreateLyric(params)

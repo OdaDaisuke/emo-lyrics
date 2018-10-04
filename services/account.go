@@ -24,14 +24,14 @@ func NewAccountService(dbCtx *gorm.DB, lyricRepo *repositories.LyricRepo, favRep
 func (s *AccountService) Signup(params *interfaces.SignupParams) *models.User {
 	user := &models.User{
 		TwitterId:            params.TwitterId,
-		Lang:                 params.TwitterId,
-		Location:             params.TwitterId,
-		Name:                 params.TwitterId,
-		ProfileBannerUrl:     params.TwitterId,
-		ProfileImageUrlHttps: params.TwitterId,
-		Protected:            params.TwitterId,
-		ScreenName:           params.TwitterId,
-		Url:                  params.TwitterId,
+		Lang:                 params.Lang,
+		Location:             params.Location,
+		Name:                 params.Name,
+		ProfileBannerUrl:     params.ProfileBannerUrl,
+		ProfileImageUrlHttps: params.ProfileImageUrlHttps,
+		Protected:            params.Protected,
+		ScreenName:           params.ScreenName,
+		Url:                  params.Url,
 	}
 	s.dbCtx.Create(user)
 	return user

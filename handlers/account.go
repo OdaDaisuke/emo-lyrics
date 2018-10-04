@@ -32,15 +32,15 @@ func (c *AccountHandler) Signup() httprouter.Handle {
 		setHeader(w, r)
 
 		params := &interfaces.SignupParams{
-			TwitterId:            r.FormValue("twitter_id"),
-			Lang:                 r.FormValue("lang"),
-			Location:             r.FormValue("location"),
-			Name:                 r.FormValue("name"),
-			ProfileBannerUrl:     r.FormValue("profile_banner_url"),
-			ProfileImageUrlHttps: r.FormValue("profile_image_url_https"),
-			Protected:            r.FormValue("protected"),
-			ScreenName:           r.FormValue("screen_name"),
-			Url:                  r.FormValue("url"),
+			TwitterId:            r.Form.Get("twitter_id"),
+			Lang:                 r.Form.Get("lang"),
+			Location:             r.Form.Get("location"),
+			Name:                 r.Form.Get("name"),
+			ProfileBannerUrl:     r.Form.Get("profile_banner_url"),
+			ProfileImageUrlHttps: r.Form.Get("profile_image_url_https"),
+			Protected:            r.Form.Get("protected"),
+			ScreenName:           r.Form.Get("screen_name"),
+			Url:                  r.Form.Get("url"),
 		}
 		user := c.accountService.Signup(params)
 
@@ -71,8 +71,8 @@ func (c *AccountHandler) PostFav() httprouter.Handle {
 		setHeader(w, r)
 
 		params := &interfaces.PostFavParams{
-			UserId:  r.FormValue("user_id"),
-			LyricId: r.FormValue("lyric_id"),
+			UserId:  r.Form.Get("user_id"),
+			LyricId: r.Form.Get("lyric_id"),
 		}
 		fav, err := c.accountService.PostFav(params)
 		if err != nil {
@@ -89,8 +89,8 @@ func (c *AccountHandler) UnFav() httprouter.Handle {
 		setHeader(w, r)
 
 		params := &interfaces.UnFavParams{
-			UserId:  r.FormValue("user_id"),
-			LyricId: r.FormValue("lyric_id"),
+			UserId:  r.Form.Get("user_id"),
+			LyricId: r.Form.Get("lyric_id"),
 		}
 		_, err := c.accountService.UnFav(params)
 		if err != nil {
