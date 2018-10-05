@@ -5,6 +5,7 @@ package interfaces
  --------*/
 
 type SignupParams struct {
+	ProviderId           string
 	TwitterId            string
 	Lang                 string
 	Location             string

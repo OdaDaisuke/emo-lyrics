@@ -46,7 +46,7 @@ func main() {
 
 	// account
 	router.POST("/api/v1/account", accountHandler.Signup())
-	router.GET("/api/v1/account/me/:twitter_id", accountHandler.GetMe())
+	router.GET("/api/v1/account/me", accountHandler.GetMe())
 
 	// me
 	servePort := ":" + appConfigs.ApiServerPort
