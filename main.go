@@ -47,6 +47,9 @@ func main() {
 	// account
 	router.POST("/api/v1/account", accountHandler.Signup())
 	router.GET("/api/v1/account/me", accountHandler.GetMe())
+	router.GET("/api/v1/account/favs", accountHandler.GetFavList())
+	router.POST("/api/v1/account/fav", accountHandler.PostFav())
+	router.POST("/api/v1/account/unfav", accountHandler.UnFav())
 
 	// me
 	servePort := ":" + appConfigs.ApiServerPort

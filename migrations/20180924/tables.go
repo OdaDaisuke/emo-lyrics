@@ -5,7 +5,7 @@ import "github.com/jinzhu/gorm"
 // Lyric
 type Lyric struct {
 	gorm.Model
-	Lyric  string `json:lyric`
+	Lyric  string `json:"lyric`
 	Title  string `json:title`
 	Singer string `json:singer`
 	Url    string `json:url`
@@ -19,8 +19,9 @@ func (e Lyric) TableName() string {
 // Fav
 type Fav struct {
 	gorm.Model
-	UserID  uint `json:user_id`
-	LyricID uint `json:lyric_id`
+	UserID  uint  `json:user_id`
+	LyricID uint  `json:lyric_id`
+	Lyric   Lyric `json:"lyric" gorm:"AssociationForeignKey:ID;ForeignKey:LyricID"`
 }
 
 func (e Fav) TableName() string {

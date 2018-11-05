@@ -1,6 +1,7 @@
 package services
 
 import (
+	"crypto/rsa"
 	"github.com/OdaDaisuke/emo-lyrics-api/interfaces"
 	"github.com/OdaDaisuke/emo-lyrics-api/models"
 	"github.com/OdaDaisuke/emo-lyrics-api/repositories"
@@ -11,6 +12,8 @@ type AccountService struct {
 	dbCtx     *gorm.DB
 	lyricRepo *repositories.LyricRepo
 	favRepo   *repositories.FavRepo
+	verifyKey *rsa.PublicKey
+	signKey   *rsa.PrivateKey
 }
 
 func NewAccountService(dbCtx *gorm.DB, lyricRepo *repositories.LyricRepo, favRepo *repositories.FavRepo) *AccountService {

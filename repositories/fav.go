@@ -21,7 +21,7 @@ func (r *FavRepo) PostFav(params *interfaces.PostFavParams) (*models.Fav, error)
 		LyricID: params.LyricId,
 		UserID:  params.UserId,
 	}
-	if err := r.dbCtx.Where(fav).Last(fav).Error; err != nil {
+	if err := r.dbCtx.Create(fav).Error; err != nil {
 		return nil, err
 	}
 	return fav, nil
@@ -40,11 +40,9 @@ func (r *FavRepo) UnFav(params *interfaces.UnFavParams) (*models.Fav, error) {
 
 func (r *FavRepo) GetMyFavList(params *interfaces.GetFavListParams) ([]*models.Fav, error) {
 	fav := []*models.Fav{}
-	where := &models.Fav{
-		UserID: params.UserId,
-	}
+	r.dbCtx = models.PreLoadFavRelations(r.dbCtx)
 
-	if err := r.dbCtx.Model(fav).Where(where).Find(fav).Error; err != nil {
+	if err := r.dbCtx.Where("user_id = ?", params.UserId).Find(&fav).Error; err != nil {
 		return nil, err
 	}
 	return fav, nil

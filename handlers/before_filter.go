@@ -1,10 +1,14 @@
 package handlers
 
+/**
+ * Before filterライフサイクルに値する。
+ * ハンドラー実行の直前に実行される。
+ */
+
 import (
 	"net/http"
 )
 
-// ハンドラーの処理の直前に実行される
 func setHeader(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Access-Control-Allow-Origin", "*")
 	w.Header().Set("Access-Control-Allow-Credentials", "false")
