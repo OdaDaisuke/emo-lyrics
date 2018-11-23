@@ -51,7 +51,9 @@ func main() {
 	router.POST("/api/v1/account/fav", accountHandler.PostFav())
 	router.POST("/api/v1/account/unfav", accountHandler.UnFav())
 
-	// me
+	// health check
+	router.GET("/_ah/health", defaultHandler.HealthCheck())
+
 	servePort := ":" + appConfigs.ApiServerPort
 	log.Fatal(http.ListenAndServe(servePort, router))
 	appengine.Main()

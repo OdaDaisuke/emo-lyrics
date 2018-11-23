@@ -37,3 +37,9 @@ func (c *DefaultHandler) Get404Lyric() httprouter.Handle {
 		encoder.Encode(lyric)
 	}
 }
+
+func (c *DefaultHandler) HealthCheck() httprouter.Handle {
+	return func(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
+		w.WriteHeader(200)
+	}
+}
