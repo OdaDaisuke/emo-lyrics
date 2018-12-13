@@ -5,6 +5,3 @@
 
 # Docker's DB data
 db
-
-# Dep
-vendor
