@@ -11,6 +11,7 @@ import (
 	"google.golang.org/appengine"
 	"log"
 	"net/http"
+	"os"
 )
 
 func main() {
@@ -54,7 +55,8 @@ func main() {
 	// health check
 	router.GET("/_ah/health", defaultHandler.HealthCheck())
 
-	servePort := ":" + appConfigs.ApiServerPort
+	port := os.Getenv("PORT")
+	servePort := ":" + port
 	log.Fatal(http.ListenAndServe(servePort, router))
 	appengine.Main()
 }
