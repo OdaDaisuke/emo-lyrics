@@ -20,8 +20,6 @@ func main() {
 		log.Fatal("$PORT must be set")
 	}
 
-	fmt.Println("server running on port", port)
-
 	db := models.NewDBContext()
 	defer func() {
 		// todo: add child transaction rollback
@@ -60,5 +58,7 @@ func main() {
 	router.GET("/_ah/health", defaultHandler.HealthCheck())
 
 	servePort := ":" + port
-	log.Fatal(http.ListenAndServe(servePort, router))
+	fmt.Println("starting server on port", port)
+	http.ListenAndServe(servePort, router)
+	fmt.Println("server running on port", port)
 }
