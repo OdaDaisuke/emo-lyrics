@@ -8,7 +8,6 @@ import (
 	"github.com/OdaDaisuke/emo-lyrics-api/models"
 	"github.com/OdaDaisuke/emo-lyrics-api/repositories"
 	"github.com/julienschmidt/httprouter"
-	"google.golang.org/appengine"
 	"log"
 	"net/http"
 	"os"
@@ -62,5 +61,4 @@ func main() {
 
 	servePort := ":" + port
 	log.Fatal(http.ListenAndServe(servePort, router))
-	appengine.Main()
 }
