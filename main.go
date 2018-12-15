@@ -56,6 +56,10 @@ func main() {
 	router.GET("/_ah/health", defaultHandler.HealthCheck())
 
 	port := os.Getenv("PORT")
+	if port == "" {
+		log.Fatal("$PORT must be set")
+	}
+
 	servePort := ":" + port
 	log.Fatal(http.ListenAndServe(servePort, router))
 	appengine.Main()
