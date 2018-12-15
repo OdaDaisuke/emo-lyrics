@@ -1,9 +1,9 @@
 package models
 
 import (
+	"fmt"
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/mysql"
-	"fmt"
 )
 
 func NewDBContext() *gorm.DB {
@@ -17,8 +17,8 @@ func NewDBContext() *gorm.DB {
 		//os.Getenv("MYSQL_PORT"),
 		//os.Getenv("MYSQL_DATABASE"),
 		"root",
-		"password",
-		"127.0.0.1",
+		"KfasdhkLe",
+		"sample.c2crqlialh8o.ap-northeast-1.rds.amazonaws.com",
 		"3306",
 		"emo",
 		"allowNativePasswords=true",
