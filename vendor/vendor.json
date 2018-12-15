@@ -1,3 +1,4 @@
 {
-  "rootPath": "github.com/OdaDaisuke/emo-lyrics-api"
+  "rootPath": "github.com/OdaDaisuke/emo-lyrics-api",
+  "heroku.goVersion": "go1.10.3"
 }
