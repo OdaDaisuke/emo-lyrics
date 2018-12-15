@@ -16,7 +16,12 @@ import (
 
 func main() {
 	appConfigs := configs.LoadAppConfig()
-	fmt.Println("server running on port", appConfigs.ApiServerPort)
+	port := os.Getenv("PORT")
+	if port == "" {
+		log.Fatal("$PORT must be set")
+	}
+
+	fmt.Println("server running on port", port)
 
 	db := models.NewDBContext()
 	defer func() {
@@ -54,11 +59,6 @@ func main() {
 
 	// health check
 	router.GET("/_ah/health", defaultHandler.HealthCheck())
-
-	port := os.Getenv("PORT")
-	if port == "" {
-		log.Fatal("$PORT must be set")
-	}
 
 	servePort := ":" + port
 	log.Fatal(http.ListenAndServe(servePort, router))
