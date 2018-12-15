@@ -8,6 +8,6 @@ type AppConfig struct {
 func LoadAppConfig() *AppConfig {
 	return &AppConfig{
 		LyricFetchLimits: 250,
-		ApiServerPort:    "8081",
+		ApiServerPort:    "443",
 	}
 }
